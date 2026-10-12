@@ -204,19 +204,19 @@ function Game() {
             {round.type === 'matching' && <>
               <h1 className="text-xs font-bold text-teal-600 uppercase tracking-widest mb-1">🔀 Match each number to its words!</h1>
               <p className="text-xs text-gray-500 mb-3 text-center">Tap a number 🔢 → then tap its matching words 📝</p>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="space-y-2"><p className="text-center text-xs font-bold text-teal-600 mb-1">NUMBERS 🔢</p>
-                  {round.pairs.map((pair, i) => {
-                    const isM = matched.includes(pair.number), isW = wrongPair?.num === pair.number, isSel = selNum === pair.number;
-                    return <motion.button key={i} animate={isW ? { x: [-4, 4, -4, 4, 0] } : { x: 0 }} transition={{ duration: .3 }} onClick={() => handleMatch('num', pair.number)} disabled={isM || !!wrongPair || phase !== 'question'} aria-pressed={isSel} aria-label={isM ? `${pair.number}, matched` : pair.number} className={`w-full py-3 px-2 rounded-xl border-2 text-sm font-bold transition-all ${isM ? 'border-green-500 bg-green-100 text-green-700' : isW ? 'border-red-400 bg-red-100 text-red-600' : isSel ? 'border-blue-600 bg-blue-100 text-blue-800 scale-95' : 'border-gray-200 hover:border-teal-400 text-gray-700'}`}>{isM ? '✅' : pair.number}</motion.button>;
-                  })}
-                </div>
-                <div className="space-y-2"><p className="text-center text-xs font-bold text-teal-600 mb-1">WORDS 📝</p>
-                  {shuffWords.map((word, i) => {
-                    const isM = isMatchedWord(word), isW = wrongPair?.word === word, isSel = selWord === word;
-                    return <motion.button key={i} animate={isW ? { x: [-4, 4, -4, 4, 0] } : { x: 0 }} transition={{ duration: .3 }} onClick={() => handleMatch('word', word)} disabled={isM || !!wrongPair || phase !== 'question'} aria-pressed={isSel} aria-label={isM ? `${word}, matched` : word} className={`w-full py-2 px-2 rounded-xl border-2 text-xs leading-snug transition-all ${isM ? 'border-green-500 bg-green-100 text-green-700' : isW ? 'border-red-400 bg-red-100 text-red-600' : isSel ? 'border-blue-600 bg-blue-100 text-blue-800 scale-95' : 'border-gray-200 hover:border-teal-400 text-gray-700'}`}>{isM ? '✅' : word}</motion.button>;
-                  })}
-                </div>
+              <div className="grid grid-cols-2 gap-2 mb-2">
+                <p className="text-center text-xs font-bold text-teal-600">NUMBERS 🔢</p>
+                <p className="text-center text-xs font-bold text-teal-600">WORDS 📝</p>
+              </div>
+              <div className="grid grid-cols-2 auto-rows-fr gap-2" data-matching-grid>
+                {round.pairs.map((pair, i) => {
+                  const isM = matched.includes(pair.number), isW = wrongPair?.num === pair.number, isSel = selNum === pair.number;
+                  return <motion.button key={pair.number} style={{ gridColumn: 1, gridRow: i + 1 }} animate={isW ? { x: [-4, 4, -4, 4, 0] } : { x: 0 }} transition={{ duration: .3 }} onClick={() => handleMatch('num', pair.number)} disabled={isM || !!wrongPair || phase !== 'question'} aria-pressed={isSel} aria-label={isM ? `${pair.number}, matched` : pair.number} className={`relative flex items-center justify-center w-full min-h-14 py-3 px-2 rounded-xl border-2 text-sm font-bold transition-colors ${isM ? 'border-green-500 bg-green-100 text-green-700' : isW ? 'border-red-400 bg-red-100 text-red-600' : isSel ? 'border-blue-600 bg-blue-100 text-blue-800' : 'border-gray-200 hover:border-teal-400 text-gray-700'}`}><span className={isM ? 'invisible' : ''}>{pair.number}</span>{isM && <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center">✅</span>}</motion.button>;
+                })}
+                {shuffWords.map((word, i) => {
+                  const isM = isMatchedWord(word), isW = wrongPair?.word === word, isSel = selWord === word;
+                  return <motion.button key={word} style={{ gridColumn: 2, gridRow: i + 1 }} animate={isW ? { x: [-4, 4, -4, 4, 0] } : { x: 0 }} transition={{ duration: .3 }} onClick={() => handleMatch('word', word)} disabled={isM || !!wrongPair || phase !== 'question'} aria-pressed={isSel} aria-label={isM ? `${word}, matched` : word} className={`relative flex items-center justify-center w-full min-h-14 py-3 px-2 rounded-xl border-2 text-xs leading-snug transition-colors ${isM ? 'border-green-500 bg-green-100 text-green-700' : isW ? 'border-red-400 bg-red-100 text-red-600' : isSel ? 'border-blue-600 bg-blue-100 text-blue-800' : 'border-gray-200 hover:border-teal-400 text-gray-700'}`}><span className={isM ? 'invisible' : ''}>{word}</span>{isM && <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center">✅</span>}</motion.button>;
+                })}
               </div>
               <div className="flex justify-center gap-2 mt-3" aria-label={`${matched.length} of 4 pairs matched`}>{round.pairs.map((_, i) => <motion.div key={i} animate={{ scale: i < matched.length ? 1.2 : 1 }} className={`w-3 h-3 rounded-full transition-colors ${i < matched.length ? 'bg-green-500' : 'bg-gray-200'}`} />)}</div>
             </>}
